@@ -1,5 +1,6 @@
 import json
 
+# Class to manipulate with json files. There is possibility to expand on it.
 class JsonifyData:
     def __init__(self):
         pass

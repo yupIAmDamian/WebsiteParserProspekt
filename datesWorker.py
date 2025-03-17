@@ -22,34 +22,42 @@ class DatesWorker:
         return date_string
     
     def getDates(self,date):
+        #There can be two types of dates, one is a range and the other is a single date
+        # 1. 01.01.2018 - 01.01.2019
+        # 2. From Monday 01.01.2018
+        #If there is a range, we need to split it and return both dates
+        #If there is a single date and words, we need to return that date
         if " - " in date:
             dates =date.split(" - ")
             dates = self.changeDatesToRightFormat(dates)
             return {"startDate": dates[0], "endDate":dates[-1]}
         else:
+            #we remove words from string
             dates = date.split(" ")
             dates = [dates[-1]]
             dates = self.changeDatesToRightFormat(dates)
             return {"startDate":dates[0], "endDate":""}
         
     def changeDatesToRightFormat(self, dates):
+        #Tranforms dates from 01.01.2018 to 2018-01-01
         fixed_dates = []
         
         for date in dates:
             date = date.split(".")
-            try:
-                fixed_dates.append(date[2] + "-" + date[1] + "-" + date[0])
-            except:
-                pass
+            fixed_dates.append(date[2] + "-" + date[1] + "-" + date[0])
+
         return fixed_dates
     
-    def compareDates(self, date2):
+    def compareDates(self, date2, end = True):
+        #Compares two dates where date1 is current date and date2 is the date from the brochure
+        #If end is True then we are dealing with end date, if False then we are dealing with start date
+        #Because some brochures have only start date, we need to check if the current date is greater or equal
         date1 = datetime.strptime(self.currentDate, "%Y-%m-%d")
         date2 = datetime.strptime(date2, "%Y-%m-%d")
         
-        #print(date1, date2, date1 <= date2)
-        
-        
-        return date1 <= date2
+        if end:
+            return date1 <= date2
+        else:
+            return date1 >= date2
         
 
